@@ -106,7 +106,7 @@ export default (pConfig = {}) => {
 
     const initOption = {
         port: 2470,
-        theme: 'cosy',
+        theme: 'pudding',
         clientConfigFile: path.resolve(getDirname(import.meta.url), './client.js'),
         // 网页信息设置
         title: config.title,
