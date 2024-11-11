@@ -1,3 +1,6 @@
+npm: 18.16.1
+vuepress: 2.0.0-rc.7
+
 # CosyBlog
 
-个人博客，基于 vuepress 以及 VuepressThemePudding 主题。
+基于vuepress2的个人博客
