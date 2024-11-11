@@ -123,10 +123,7 @@ export default (pageConfig) => ({
                 const similars = pageList
                     .map((item2) => ({
                         id: item2.frontmatter.id,
-                        similar: similar(
-                            item.frontmatter.title + item.frontmatter.tags,
-                            item2.frontmatter.title + item2.frontmatter.tags
-                        ),
+                        similar: similar(item.frontmatter.title, item2.frontmatter.title),
                     }))
                     .filter((item2) => item2.similar !== 100);
                 similars.sort((i, j) => j.similar - i.similar).map((i) => i.id);

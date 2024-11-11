@@ -106,7 +106,7 @@ export default (pConfig = {}) => {
 
     const initOption = {
         port: 2470,
-        theme: 'pudding',
+        theme: 'cosy',
         clientConfigFile: path.resolve(getDirname(import.meta.url), './client.js'),
         // 网页信息设置
         title: config.title,
@@ -193,12 +193,6 @@ export default (pConfig = {}) => {
                 return containerPlugin({
                     type: fileName,
                     render: function (tokens, index) {
-                        // if (tokens[index].nesting === 1) {
-                        //     const end = tokens.findIndex(token => token.type === `container_${fileName}_close`);
-                        //     return [end,`container_${fileName}_close`, JSON.stringify(tokens)];
-                        // } else {
-                        //     return ''
-                        // }
                         if (tokens[index].nesting === 1) {
                             const params = tokens[index].info.slice(fileName.length).trim();
                             const end = tokens.findIndex((token) => token.type === `container_${fileName}_close`);

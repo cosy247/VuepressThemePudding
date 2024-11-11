@@ -61,9 +61,9 @@ function getDefaultValue(attrs, defaultValue) {
     for (const { name, defaultValue, inputPrompt } of template.inputs) {
         if (inputPrompt) {
             const calcValue0 = getDefaultValue(attrs, defaultValue);
-            const defaultValue0 = calcValue0 === "undefined" ? '' : calcValue0;
+            const defaultValue0 = calcValue0 === 'undefined' ? '' : calcValue0;
             const inputPrompt0 = `🐲 ${inputPrompt}${defaultValue ? `(${defaultValue0})` : ''} : `;
-            attrs[name] = await getInput(inputPrompt0) || defaultValue0;
+            attrs[name] = (await getInput(inputPrompt0)) || defaultValue0;
         } else {
             attrs[name] = getDefaultValue(attrs, defaultValue);
         }
