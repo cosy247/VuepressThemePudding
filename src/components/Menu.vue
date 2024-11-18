@@ -2,14 +2,11 @@
     <div class="Menu">
         <div class="content">
             <a href="/" class="logo">
-                C
-                <img src="../assets/images/icon.png" alt="" />
-                SY247
+                <img :src="pageConfig.icon" alt="" />
+                {{ pageConfig.title }}
             </a>
             <div href="/" class="logo mobile" :class="{ showMenu: isShowMenu }" @click="isShowMenu = !isShowMenu">
-                C
-                <img src="../assets/images/icon.png" alt="" />
-                SY247
+                {{ pageConfig.title }}
             </div>
             <div class="menus">
                 <div class="menu" v-for="menu in pageConfig.menus">
@@ -39,7 +36,7 @@
                             <!-- exhibit -->
                             <div class="menu-exhibit-list" v-else-if="menu.type === 'exhibit'">
                                 <a :href="item.url" class="menu-exhibit-item" v-for="item in menu.exhibit">
-                                    <Icon class="menu-exhibit-icon" :icon="item"/>
+                                    <Icon class="menu-exhibit-icon" :icon="item" />
                                     {{ item.name }}
                                 </a>
                             </div>
@@ -249,7 +246,7 @@ export default {
 
 .logo {
     cursor: pointer;
-    font-size: 26px;
+    font-size: 24px;
     background: linear-gradient(to right, red, blue);
     font-weight: 900;
     -webkit-background-clip: text;
@@ -268,7 +265,7 @@ export default {
 .logo img {
     height: 1em;
     vertical-align: bottom;
-    margin: 0 0.1em;
+    margin-right: 0.3em;
 }
 
 .menus {

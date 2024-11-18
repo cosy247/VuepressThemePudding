@@ -92,6 +92,8 @@ export default (pConfig = {}) => {
     const config = { ...defaultConfig, ...pConfig };
 
     const pageConfig = {
+        title: config.title,
+        icon: config.icon,
         mottos: config.mottos,
         links: config.links,
         isOpenBlurRecommend: config.isOpenBlurRecommend,
@@ -113,7 +115,7 @@ export default (pConfig = {}) => {
         lang: 'zh-Hans-CN',
         description: config.description,
         head: [
-            ['title', {}, config.title],
+            // ['title', {}, config.title],
             ['link', { rel: 'icon', href: config.icon }],
             ['meta', { 'http-equiv': 'Cache-Control', content: 'max-age=7200' }],
             ...config.heads,

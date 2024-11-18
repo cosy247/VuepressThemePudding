@@ -8,11 +8,11 @@
             </p>
             <template v-else>
                 <div class="cover-title">
-                    <div class="cover-logo">
-                        C
+                    <div class="cover-logo" v-html="pageConfig.title"></div>
+                    <!-- C
                         <img src="../assets/images/icon.png" alt="" />
-                        SY247
-                    </div>
+                        SY247 -->
+                    <!-- {{ pageConfig.title }} -->
                     <span class="cover-count">【{{ allPageCount }}】</span>
                 </div>
                 <p class="cover-dictum">{{ mottos[0] }}</p>
