@@ -9,6 +9,7 @@ import { containerPlugin } from '@vuepress/plugin-container';
 import { getDirname, path } from '@vuepress/utils';
 import { gitPlugin } from '@vuepress/plugin-git';
 import { registerComponentsPlugin } from '@vuepress/plugin-register-components';
+import { photoSwipePlugin } from '@vuepress/plugin-photo-swipe';
 import fs from 'fs';
 
 const defaultConfig = {
@@ -20,6 +21,8 @@ const defaultConfig = {
     heads: [],
     /** 网站图标 */
     icon: 'assets/logo.png',
+    /** 网站logo */
+    logo: 'assets/logo.logo',
     /** 自定义容器目录 */
     componentsPath: 'mdComponents',
 
@@ -93,7 +96,7 @@ export default (pConfig = {}) => {
 
     const pageConfig = {
         title: config.title,
-        icon: config.icon,
+        logo: config.logo,
         mottos: config.mottos,
         links: config.links,
         isOpenBlurRecommend: config.isOpenBlurRecommend,
@@ -178,6 +181,10 @@ export default (pConfig = {}) => {
                 imgMark: true,
                 // 启用图片大小
                 imgSize: true,
+            }),
+            photoSwipePlugin({
+                // 选项
+                selector: '.mdContent img',
             }),
         ],
     };

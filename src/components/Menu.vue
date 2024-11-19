@@ -2,7 +2,7 @@
     <div class="Menu">
         <div class="content">
             <a href="/" class="logo">
-                <img :src="pageConfig.icon" alt="" />
+                <img :src="pageConfig.logo" alt="" />
                 {{ pageConfig.title }}
             </a>
             <div href="/" class="logo mobile" :class="{ showMenu: isShowMenu }" @click="isShowMenu = !isShowMenu">
@@ -35,7 +35,11 @@
                             </div>
                             <!-- exhibit -->
                             <div class="menu-exhibit-list" v-else-if="menu.type === 'exhibit'">
-                                <a :href="item.url" class="menu-exhibit-item" v-for="item in menu.exhibit">
+                                <a
+                                    :href="item.url"
+                                    class="menu-exhibit-item"
+                                    v-for="item in menu.exhibit"
+                                    :title="item.describe">
                                     <Icon class="menu-exhibit-icon" :icon="item" />
                                     {{ item.name }}
                                 </a>
@@ -47,7 +51,9 @@
             <div class="tools">
                 <div class="tool" @click="showSearchBox">&#xe618;</div>
                 <span class="tool" @click="openReadMeContent">&#xe650;</span>
-                <a class="tool home" href="/"><img src="../assets/images/icon.png" alt="" /></a>
+                <a class="tool home" href="/">
+                    <img :src="pageConfig.logo" alt="" />
+                </a>
             </div>
         </div>
     </div>
@@ -373,10 +379,6 @@ export default {
 
 .menu-exhibit-list {
     margin-top: 30px;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: flex-start;
 }
 
 .menu-exhibit-list:hover > .menu-exhibit-item {
@@ -399,12 +401,6 @@ export default {
 .menu-exhibit-icon {
     height: 1.4em;
     margin-right: 3px;
-}
-
-.menu-exhibit-describe {
-    font-size: 12px;
-    opacity: 0.5;
-    font-size: var(--size1);
 }
 
 .tools {
