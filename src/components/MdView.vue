@@ -4,21 +4,10 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import '../styles/md.css';
 
-export default {
-    name: 'MdView',
-    components: {},
-    props: ['path'],
-    data: () => ({}),
-    computed: {},
-    watch: {},
-    methods: {},
-    created() {},
-    mounted() {},
-    destroy() {},
-};
+const { path } = defineProps(['path']);
 </script>
 
 <style scoped>

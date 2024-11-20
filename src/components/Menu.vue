@@ -104,128 +104,109 @@
     </div>
 </template>
 
-<script>
-import { pageList as pageDatas, countMateData, pageConfig, shadowList as shadows } from '@temp/blogMate';
+<script setup>
+import { countMateData, pageConfig, pageDatas, shadows } from '../utils/blogMate';
 import MdView from './MdView.vue';
 import Icon from './Icon.vue';
 import md5 from 'md5';
+import { ref, nextTick } from 'vue';
 
-export default {
-    name: 'Menu',
-    components: { MdView, Icon },
-    data: () => ({
-        isSun: true,
-        countMateData,
-        isShowSearch: false,
-        searchText: '',
-        searchList: [],
-        pageDatas: JSON.parse(JSON.stringify(pageDatas)),
-        currentSearchLineIndex: 0,
-        isShowMenu: false,
-        isShowReadMe: false,
-        pageConfig,
-    }),
-    computed: {},
-    watch: {},
-    methods: {
-        openReadMeContent() {
-            if (typeof window == 'undefined') return;
-            this.isShowReadMe = true;
-            window.document.body.style.overflowY = 'hidden';
-            window.document.body.style.paddingRight = 'var(--outer-width)';
-        },
-        closeReadMeContent() {
-            if (typeof window == 'undefined') return;
-            this.isShowReadMe = false;
-            window.document.body.style.overflowY = 'auto';
-            window.document.body.style.paddingRight = '0';
-        },
-        showSearchBox() {
-            this.isShowSearch = true;
-            this.$nextTick(() => {
-                this.$refs.searchInput.focus();
-            });
-        },
-        search() {
-            this.currentSearchLineIndex = 0;
-            const searchText = this.searchText.toLowerCase().trim();
-            if (searchText === '') {
-                this.searchList = [];
-            } else {
-                if (md5(searchText) === this.pageConfig.shadowPassword) {
-                    this.searchList = shadows;
-                } else {
-                    this.searchList = this.pageDatas
-                        .map((item) => {
-                            let count = 0;
-                            const countIndexs = [];
-                            const lowerCasetitle = item.frontmatter.title.toLowerCase();
-                            for (let index = 0; index < lowerCasetitle.length; index++) {
-                                if (lowerCasetitle[index] !== searchText[count]) continue;
-                                count++;
-                                countIndexs.push(index);
-                                if (count < searchText.length) continue;
-                                return {
-                                    countIndexs,
-                                    ...item,
-                                };
-                            }
-                        })
-                        .filter((item) => item);
-                }
-            }
-        },
-        searchPreventDefault(event) {
-            const { code, key, keyCode, which } = event;
-            if (
-                code === 'ArrowDown' ||
-                key === 'ArrowDown' ||
-                keyCode === 40 ||
-                which === 40 ||
-                code === 'ArrowUp' ||
-                key === 'ArrowUp' ||
-                keyCode === 38 ||
-                which === 38
-            ) {
-                event.preventDefault();
-                return;
-            }
-        },
-        downSearchLine() {
-            this.currentSearchLineIndex = Math.min(this.currentSearchLineIndex + 1, this.searchList.length - 1);
-        },
-        upSearchLine() {
-            this.currentSearchLineIndex = Math.max(this.currentSearchLineIndex - 1, 0);
-        },
-        goSearchLine(path) {
-            if (typeof window == 'undefined') return;
-            if (!path) {
-                const currentLine = this.searchList[this.currentSearchLineIndex];
-                if (!currentLine || !currentLine.path) return;
-                path = currentLine.path;
-            }
-            if (md5(this.searchText) === this.pageConfig.shadowPassword) {
-                sessionStorage.setItem('shadow', 'shadow' + this.searchText);
-            }
-            window.location.href = path;
-        },
-    },
-    created() {
-        if (typeof window == 'undefined') return;
-        window.addEventListener('keydown', ({ code, key, keyCode, which }) => {
-            if (!this.isShowSearch) return;
-            if (code === 'ArrowDown' || key === 'ArrowDown' || keyCode === 40 || which === 40) {
-                this.downSearchLine();
-            } else if (code === 'ArrowUp' || key === 'ArrowUp' || keyCode === 38 || which === 38) {
-                this.upSearchLine();
-            } else if (code === 'Enter' || key === 'Enter' || keyCode === 13 || which === 13) {
-                this.goSearchLine();
-            }
-        });
-    },
-    mounted() {},
-    destroy() {},
-};
+const isShowSearch = ref(false);
+const searchText = ref('');
+const currentSearchLineIndex = ref(0);
+const isShowMenu = ref(false);
+const isShowReadMe = ref(false);
+const searchInput = ref(null);
+const searchList = ref([])
+
+function openReadMeContent() {
+    if (typeof window == 'undefined') return;
+    isShowReadMe.value = true;
+    window.document.body.style.overflowY = 'hidden';
+    window.document.body.style.paddingRight = 'var(--outer-width)';
+}
+function closeReadMeContent() {
+    if (typeof window == 'undefined') return;
+    isShowReadMe.value = false;
+    window.document.body.style.overflowY = 'auto';
+    window.document.body.style.paddingRight = '0';
+}
+async function showSearchBox() {
+    isShowSearch.value = true;
+    await nextTick();
+    searchInput.value.focus();
+}
+function search() {
+    currentSearchLineIndex.value = 0;
+    const searchText = searchText.value.toLowerCase().trim();
+    if (searchText === '') {
+        searchList.value = [];
+    } else {
+        if (md5(searchText) === pageConfig.shadowPassword) {
+            searchList.value = shadows;
+        } else {
+            searchList.value = pageDatas
+                .map((item) => {
+                    let count = 0;
+                    const countIndexs = [];
+                    const lowerCasetitle = item.frontmatter.title.toLowerCase();
+                    for (let index = 0; index < lowerCasetitle.length; index++) {
+                        if (lowerCasetitle[index] !== searchText[count]) continue;
+                        count++;
+                        countIndexs.push(index);
+                        if (count < searchText.length) continue;
+                        return {
+                            countIndexs,
+                            ...item,
+                        };
+                    }
+                })
+                .filter((item) => item);
+        }
+    }
+}
+function searchPreventDefault(event) {
+    const { code, key, keyCode, which } = event;
+    if (
+        code === 'ArrowDown' ||
+        key === 'ArrowDown' ||
+        keyCode === 40 ||
+        which === 40 ||
+        code === 'ArrowUp' ||
+        key === 'ArrowUp' ||
+        keyCode === 38 ||
+        which === 38
+    ) {
+        event.preventDefault();
+        return;
+    }
+}
+
+function goSearchLine(path) {
+    if (typeof window == 'undefined') return;
+    if (!path) {
+        const currentLine = searchList.value[currentSearchLineIndex.value];
+        if (!currentLine || !currentLine.path) return;
+        path = currentLine.path;
+    }
+    if (md5(searchText.value) === pageConfig.value.shadowPassword) {
+        sessionStorage.setItem('shadow', 'shadow' + searchText.value);
+    }
+    window.location.href = path;
+}
+
+if (typeof window !== 'undefined') {
+    window.addEventListener('keydown', ({ code, key, keyCode, which }) => {
+        if (!isShowSearch.value) return;
+        if (code === 'ArrowDown' || key === 'ArrowDown' || keyCode === 40 || which === 40) {
+            currentSearchLineIndex.value = Math.min(currentSearchLineIndex.value + 1, searchList.value.length - 1);
+        } else if (code === 'ArrowUp' || key === 'ArrowUp' || keyCode === 38 || which === 38) {
+            currentSearchLineIndex.value = Math.max(currentSearchLineIndex.value - 1, 0);
+        } else if (code === 'Enter' || key === 'Enter' || keyCode === 13 || which === 13) {
+            goSearchLine();
+        }
+    });
+}
 </script>
 
 <style scoped>

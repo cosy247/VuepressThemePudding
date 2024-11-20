@@ -5,38 +5,26 @@
     <NotFound v-else-if="path === 'notFound'" />
 </template>
 
-<script>
+<script setup>
 import './styles/common.css';
 import Home from './views/Home.vue';
 import Blog from './views/Blog.vue';
 import PageOuter from './components/PageOuter.vue';
 import NotFound from './views/NotFound.vue';
+import { computed } from 'vue';
+import { useRoute } from '@vuepress/client';
 
-export default {
-    name: 'Index',
-    components: { Home, Blog, NotFound, PageOuter },
-    props: ['isNotFound'],
-    data: () => ({
-        scrollCallbacks: [],
-    }),
-    computed: {
-        path() {
-            const { path } = this.$route;
-            if (path === '/') {
-                return 'home';
-            } else if (this.isNotFound) {
-                return 'notFound';
-            } else {
-                return 'blog';
-            }
-        },
-    },
-    watch: {},
-    methods: {},
-    created() {},
-    mounted() {},
-    destroy() {},
-};
+const { isNotFound } = defineProps(['isNotFound']);
+const path = computed(() => {
+    const { path } = useRoute();
+    if (path === '/') {
+        return 'home';
+    } else if (isNotFound) {
+        return 'notFound';
+    } else {
+        return 'blog';
+    }
+});
 </script>
 
 <style scoped>

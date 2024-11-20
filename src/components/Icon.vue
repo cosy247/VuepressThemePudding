@@ -7,18 +7,15 @@
         :src="(icon && icon.imgIcon) || imgIcon" />
 </template>
 
-<script>
-export default {
-    name: 'Icon',
-    props: ['size', 'icon', 'fontIcon', 'imgIcon'],
-    computed: {
-        style() {
-            if (!this.size) return {};
-            if (!Number.isNaN(this.size)) return { fontSize: `${this.size}px` };
-            return { fontSize: this.size };
-        },
-    },
-};
+<script setup>
+import { computed } from 'vue';
+
+const { size, icon, fontIcon, imgIcon } = defineProps(['size', 'icon', 'fontIcon', 'imgIcon']);
+const style = computed(() => {
+    if (!size) return {};
+    if (!Number.isNaN(size)) return { fontSize: `${size}px` };
+    return { fontSize: size };
+});
 </script>
 
 <style scoped>

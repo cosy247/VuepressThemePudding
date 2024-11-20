@@ -5,20 +5,8 @@
     <Menu />
 </template>
 
-<script>
+<script setup>
 import Menu from './Menu.vue';
-
-export default {
-    name: 'PageOuter',
-    components: { Menu },
-    data: () => ({}),
-    computed: {},
-    watch: {},
-    methods: {},
-    created() {},
-    mounted() {},
-    destroy() {},
-};
 </script>
 
 <style>
@@ -37,7 +25,7 @@ body::-webkit-scrollbar {
 
 body::-webkit-scrollbar-thumb {
     margin: 0px 0;
-    background: #8a78;
+    background: #aba;
     width: var(--outer-width);
     border-radius: var(--outer-width);
 }

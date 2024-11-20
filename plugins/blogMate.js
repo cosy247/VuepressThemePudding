@@ -121,10 +121,18 @@ export default (pageConfig) => ({
         if (pageConfig.isOpenBlurRecommend) {
             pageList.forEach((item) => {
                 const similars = pageList
-                    .map((item2) => ({
-                        id: item2.frontmatter.id,
-                        similar: similar(item.frontmatter.title, item2.frontmatter.title),
-                    }))
+                    .map((item2) => {
+                        let similar1 = item.frontmatter.title;
+                        let similar2 = item2.frontmatter.title;
+                        countMateNames.forEach((metaName) => {
+                            similar1 += item.frontmatter[metaName];
+                            similar2 += item2.frontmatter[metaName];
+                        });
+                        return {
+                            id: item2.frontmatter.id,
+                            similar: similar(similar1, similar2),
+                        };
+                    })
                     .filter((item2) => item2.similar !== 100);
                 similars.sort((i, j) => j.similar - i.similar).map((i) => i.id);
                 if (item.frontmatter.recommendations) {
