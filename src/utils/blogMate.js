@@ -1,8 +1,3 @@
-import { pageList as pageDatas, countMateData, pageConfig, shadowList as shadows } from '@temp/blogMate';
+import { pageList as pageDatas, countMateData, pageConfig, shadowList as shadows, archiveMap } from '@temp/blogMate';
 
-export {
-    pageDatas,
-    countMateData,
-    pageConfig,
-    shadows,
-};
+export { pageDatas, countMateData, pageConfig, shadows, archiveMap };

@@ -1,12 +1,20 @@
 <template>
-    <div class="PageOuter">
+    <div class="PageOuter" v-if="pageConfig.outline">
         <div class="copyright">cosy247</div>
     </div>
     <Menu />
 </template>
 
 <script setup>
+import { pageConfig } from '../utils/blogMate';
 import Menu from './Menu.vue';
+
+if (pageConfig.outline === false) {
+    const style = document.createElement('style');
+    style.innerHTML = ':root{--outer-width: 0px}';
+    document.body.append(style);
+    document.body.classList.add('noOutline');
+}
 </script>
 
 <style>
@@ -23,11 +31,22 @@ body::-webkit-scrollbar {
     margin: 0px 0;
 }
 
+body.noOutline::-webkit-scrollbar {
+    width: 10px;
+    background: transparent;
+}
+
 body::-webkit-scrollbar-thumb {
     margin: 0px 0;
     background: #aba;
     width: var(--outer-width);
     border-radius: var(--outer-width);
+}
+
+body.noOutline::-webkit-scrollbar-thumb {
+    width: 10px;
+    border-radius: 10px;
+    background: #bbb;
 }
 </style>
 

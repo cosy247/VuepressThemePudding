@@ -8,49 +8,62 @@
             <div href="/" class="logo mobile" :class="{ showMenu: isShowMenu }" @click="isShowMenu = !isShowMenu">
                 {{ pageConfig.title }}
             </div>
-            <div class="menus">
+            <div class="tools menus-right-tools" v-if="pageConfig.menuAlign === 'right-right'">
+                <div class="tool" @click="showSearchBox">&#xe618;</div>
+                <span class="tool" v-if="pageConfig.homeType !== 'introduce'" @click="openReadMeContent">&#xe650;</span>
+                <a class="tool home" href="/">
+                    <img :src="pageConfig.logo" alt="" />
+                </a>
+            </div>
+            <div class="menus" :class="`menus-${pageConfig.menuAlign}`">
                 <div class="menu" v-for="menu in pageConfig.menus">
-                    <span class="menu-title">
-                        <Icon size="18" :icon="menu" />
+                    <a v-if="menu.type === 'link'" class="menu-title" :href="menu.link">
+                        <Icon class="menu-title-icon" size="18" :icon="menu" />
                         {{ menu.name }}
-                    </span>
-                    <div class="menu-position">
-                        <div class="menu-mask"></div>
-                        <div class="menu-content">
-                            <div class="menu-content-title" v-if="menu.description">
-                                <span class="menu-content-title-main">
-                                    <Icon size="17" :icon="menu" />
-                                    {{ menu.name }}
-                                </span>
-                                <span class="menu-content-title-describe" v-html="menu.description"></span>
-                            </div>
-                            <!-- statistics -->
-                            <div class="menu-content-list" v-if="menu.type === 'statistics'">
-                                <a
-                                    :href="`/?${menu.statistics.frontName}=${key}`"
-                                    class="menu-content-item"
-                                    v-for="(item, key) in countMateData[menu.statistics.frontName]">
-                                    {{ key }}({{ item }})
-                                </a>
-                            </div>
-                            <!-- exhibit -->
-                            <div class="menu-exhibit-list" v-else-if="menu.type === 'exhibit'">
-                                <a
-                                    :href="item.url"
-                                    class="menu-exhibit-item"
-                                    v-for="item in menu.exhibit"
-                                    :title="item.describe">
-                                    <Icon class="menu-exhibit-icon" :icon="item" />
-                                    {{ item.name }}
-                                </a>
+                    </a>
+                    <template v-else>
+                        <span class="menu-title">
+                            <Icon class="menu-title-icon" size="18" :icon="menu" />
+                            {{ menu.name }}
+                        </span>
+                        <div class="menu-position">
+                            <div class="menu-mask"></div>
+                            <div class="menu-content">
+                                <div class="menu-content-title" v-if="menu.description">
+                                    <span class="menu-content-title-main">
+                                        <Icon size="17" :icon="menu" />
+                                        {{ menu.name }}
+                                    </span>
+                                    <span class="menu-content-title-describe" v-html="menu.description"></span>
+                                </div>
+                                <!-- statistics -->
+                                <div class="menu-content-list" v-if="menu.type === 'statistics'">
+                                    <a
+                                        :href="`/?${menu.statistics.frontName}=${key}`"
+                                        class="menu-content-item"
+                                        v-for="(item, key) in countMateData[menu.statistics.frontName]">
+                                        {{ key }}({{ item }})
+                                    </a>
+                                </div>
+                                <!-- exhibit -->
+                                <div class="menu-exhibit-list" v-else-if="menu.type === 'exhibit'">
+                                    <a
+                                        :href="item.url"
+                                        class="menu-exhibit-item"
+                                        v-for="item in menu.exhibit"
+                                        :title="item.describe">
+                                        <Icon class="menu-exhibit-icon" :icon="item" />
+                                        {{ item.name }}
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </template>
                 </div>
             </div>
-            <div class="tools">
+            <div class="tools" v-if="pageConfig.menuAlign !== 'right-right'">
                 <div class="tool" @click="showSearchBox">&#xe618;</div>
-                <span class="tool" @click="openReadMeContent">&#xe650;</span>
+                <span class="tool" v-if="pageConfig.homeType !== 'introduce'" @click="openReadMeContent">&#xe650;</span>
                 <a class="tool home" href="/">
                     <img :src="pageConfig.logo" alt="" />
                 </a>
@@ -96,7 +109,11 @@
         </div>
     </div>
 
-    <div class="readme-box" v-show="isShowReadMe" @click.self="closeReadMeContent">
+    <div
+        v-if="pageConfig.homeType !== 'introduce'"
+        class="readme-box"
+        v-show="isShowReadMe"
+        @click.self="closeReadMeContent">
         <div class="readme-container">
             <div class="readme-close" @click="closeReadMeContent">&#xe632;</div>
             <MdView path="/README.md" class="readme-content" />
@@ -117,7 +134,7 @@ const currentSearchLineIndex = ref(0);
 const isShowMenu = ref(false);
 const isShowReadMe = ref(false);
 const searchInput = ref(null);
-const searchList = ref([])
+const searchList = ref([]);
 
 function openReadMeContent() {
     if (typeof window == 'undefined') return;
@@ -241,7 +258,6 @@ if (typeof window !== 'undefined') {
     color: transparent;
     display: flex;
     align-items: center;
-    width: 200px;
 }
 
 .logo.mobile {
@@ -265,6 +281,20 @@ if (typeof window !== 'undefined') {
     color: #1a1a1a88;
 }
 
+.menus-left {
+    margin-right: auto;
+    margin-left: 10px;
+}
+
+.menus-right {
+    margin-left: auto;
+    margin-right: 10px;
+}
+
+.menus-right-tools {
+    margin-left: auto;
+}
+
 .menu {
     cursor: pointer;
     padding: 20px;
@@ -278,8 +308,11 @@ if (typeof window !== 'undefined') {
 }
 
 .menu-title {
-    font-weight: 900;
-    margin-left: 5px;
+    font-weight: 600;
+}
+
+.menu-title-icon {
+    margin-right: 5px;
 }
 
 .menu-position {
@@ -386,7 +419,6 @@ if (typeof window !== 'undefined') {
 
 .tools {
     display: flex;
-    width: 115px;
     gap: 10px;
     font-size: 18px;
     justify-content: flex-end;

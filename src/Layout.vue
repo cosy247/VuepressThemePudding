@@ -1,24 +1,31 @@
 <template>
     <PageOuter />
-    <Home v-if="path === 'home'" />
+    <ListHome v-if="path === 'listHome'" />
+    <MdView v-if="path === 'introduceHome'"/>
     <Blog v-else-if="path === 'blog'" />
     <NotFound v-else-if="path === 'notFound'" />
 </template>
 
 <script setup>
 import './styles/common.css';
-import Home from './views/Home.vue';
+import ListHome from './views/ListHome.vue';
 import Blog from './views/Blog.vue';
 import PageOuter from './components/PageOuter.vue';
 import NotFound from './views/NotFound.vue';
 import { computed } from 'vue';
 import { useRoute } from '@vuepress/client';
+import { pageConfig } from './utils/blogMate';
+import MdView from './components/MdView.vue';
 
 const { isNotFound } = defineProps(['isNotFound']);
 const path = computed(() => {
     const { path } = useRoute();
     if (path === '/') {
-        return 'home';
+        if (pageConfig.homeType === 'introduce') {
+            return 'introduceHome';
+        } else {
+            return 'listHome';
+        }
     } else if (isNotFound) {
         return 'notFound';
     } else {

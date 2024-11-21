@@ -9,10 +9,6 @@
             <template v-else>
                 <div class="cover-title">
                     <div class="cover-logo" v-html="pageConfig.title"></div>
-                    <!-- C
-                        <img src="../assets/images/icon.png" alt="" />
-                        SY247 -->
-                    <!-- {{ pageConfig.title }} -->
                     <span class="cover-count">【{{ allPageCount }}】</span>
                 </div>
                 <p class="cover-dictum">{{ mottos[0] }}</p>
@@ -40,89 +36,68 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import { pageList as pageDatas, pageConfig } from '@temp/blogMate';
 import Icon from '../components/Icon.vue';
+import { ref, computed, watch, nextTick } from 'vue';
+import { useRoute } from '@vuepress/client';
 
-export default {
-    name: 'Home',
-    components: { Icon },
-    props: [],
-    data: () => ({
-        tag: '',
-        archive: '',
-        pageList: [],
-        remainPageList: [],
-        allPageCount: 0,
-        pageSize: 10,
-        isAddingPageList: false,
-        mottos: [],
-        firstPageProportion: 0,
-        pageConfig,
-    }),
-    computed: {
-        pageFilterType() {
-            return this.pageConfig.countMateNames.find((name) => this.$route.query[name]) || '';
-        },
-        pageFilterValue() {
-            return this.$route.query[this.pageFilterType] || '';
-        },
-    },
-    watch: {
-        pageFilterType() {
-            this.initPageList();
-        },
-        pageFilterValue() {
-            this.initPageList();
-        },
-    },
-    methods: {
-        initPageList() {
-            if (this.pageFilterType) {
-                console.log(this.pageFilterType, this.pageFilterValue);
-                if (this.pageConfig.isArrMateNames.includes(this.pageFilterType)) {
-                    this.remainPageList = pageDatas.filter((item) =>
-                        item.frontmatter[this.pageFilterType].includes(this.pageFilterValue)
-                    );
-                } else {
-                    this.remainPageList = pageDatas.filter(
-                        (item) => item.frontmatter[this.pageFilterType] === this.pageFilterValue
-                    );
-                }
-            } else {
-                this.remainPageList = pageDatas;
-            }
-            this.allPageCount = this.pageList.length + this.remainPageList.length;
-            this.pageList = this.remainPageList.splice(0, this.pageSize);
-        },
-    },
-    created() {
-        if (this.pageConfig.mottos instanceof Array) {
-            this.mottos = this.pageConfig.mottos[(Math.random() * this.pageConfig.mottos.length) >> 0];
+const pageList = ref([]);
+const remainPageList = ref([]);
+const allPageCount = ref(0);
+const pageSize = ref(10);
+const isAddingPageList = ref(false);
+const mottos = ref([]);
+const firstPageProportion = ref(0);
+const route = useRoute();
+
+const pageFilterType = computed(() => {
+    return pageConfig.countMateNames.find((name) => route.query[name]) || '';
+});
+
+const pageFilterValue = computed(() => {
+    return route.query[pageFilterType] || '';
+});
+
+watch(() => [pageFilterType, pageFilterValue], initPageList);
+
+function initPageList() {
+    if (pageFilterType) {
+        if (pageConfig.isArrMateNames.includes(pageFilterType)) {
+            remainPageList.value = pageDatas.filter((item) => item.frontmatter[pageFilterType].includes(pageFilterValue));
         } else {
-            this.mottos = [this.pageConfig.mottos];
+            remainPageList.value = pageDatas.filter((item) => item.frontmatter[pageFilterType] === pageFilterValue);
         }
-        this.initPageList();
-    },
-    mounted() {
-        if (typeof window == 'undefined') return;
-        window.addEventListener('scroll', () => {
-            const { clientHeight, scrollTop, scrollHeight } = document.documentElement;
-            if (scrollTop < clientHeight) {
-                this.firstPageProportion = scrollTop / clientHeight;
-            }
-            if (this.isAddingPageList || this.remainPageList.length === 0) return;
-            if (scrollHeight - clientHeight - scrollTop < 400) {
-                this.isAddingPageList = true;
-                this.pageList.push(...this.remainPageList.splice(0, this.pageSize));
-                this.$nextTick(() => {
-                    this.isAddingPageList = false;
-                });
-            }
-        });
-    },
-    destroy() {},
-};
+    } else {
+        remainPageList.value = pageDatas;
+    }
+    allPageCount.value = pageList.value.length + remainPageList.value.length;
+    pageList.value = remainPageList.value.splice(0, pageSize.value);
+}
+
+if (pageConfig.mottos instanceof Array) {
+    if (pageConfig.mottos.length) {
+        mottos.value = pageConfig.mottos[(Math.random() * pageConfig.mottos.length) >> 0];
+    }
+} else {
+    mottos.value = [pageConfig.mottos];
+}
+
+window.addEventListener('scroll', async () => {
+    const { clientHeight, scrollTop, scrollHeight } = document.documentElement;
+    if (scrollTop < clientHeight) {
+        firstPageProportion.value = scrollTop / clientHeight;
+    }
+    if (isAddingPageList.value || remainPageList.value.length === 0) return;
+    if (scrollHeight - clientHeight - scrollTop < 400) {
+        isAddingPageList.value = true;
+        pageList.push(...remainPageList.value.splice(0, pageSize.value));
+        await nextTick();
+        isAddingPageList.value = false;
+    }
+});
+
+initPageList();
 </script>
 
 <style scoped>

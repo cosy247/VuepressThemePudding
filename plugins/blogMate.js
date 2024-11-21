@@ -59,6 +59,7 @@ export default (pageConfig) => ({
 
         const pageList = [];
         const shadowList = [];
+        const archiveMap = {};
 
         app.pages.forEach((page) => {
             const {
@@ -85,6 +86,15 @@ export default (pageConfig) => ({
                 // 记录数据
                 shadowList.push({ path, frontmatter });
             } else {
+                // archiveMap
+                if (frontmatter.archive) {
+                    if (Object.hasOwn(archiveMap, frontmatter.archive)) {
+                        archiveMap[frontmatter.archive].push(page);
+                    } else {
+                        archiveMap[frontmatter.archive] = [page];
+                    }
+                }
+
                 // 数组属性转化
                 isArrMateNames.forEach((metaName) => {
                     if (frontmatter[metaName]) {
@@ -116,6 +126,30 @@ export default (pageConfig) => ({
                 pageList.push({ path, frontmatter });
             }
         }, []);
+
+        // archive排序
+        for (let archiveName in archiveMap) {
+            const archives = archiveMap[archiveName];
+            archives.sort((a1, a2) => (a2.frontmatter.archiveTop || 0) - (a1.frontmatter.archiveTop || 0));
+            let archiveTitle = null;
+            archiveMap[archiveName] = archives.map((page, index) => {
+                const archive = {
+                    archiveTitle: page.frontmatter.archiveTitle,
+                    pageTitle: page.frontmatter.title,
+                    path: page.htmlFilePathRelative,
+                };
+                if (index === 0) {
+                    archiveTitle = page.frontmatter.archiveTitle;
+                    archive.newTitle = true;
+                } else if (archiveTitle === page.frontmatter.archiveTitle) {
+                    archive.newTitle = false;
+                } else if (archiveTitle === page.frontmatter.archiveTitle) {
+                    archiveTitle = page.frontmatter.archiveTitle;
+                    archive.newTitle = true;
+                }
+                return archive;
+            });
+        }
 
         // 推荐文章 recommendations
         if (pageConfig.isOpenBlurRecommend) {
@@ -155,6 +189,6 @@ export default (pageConfig) => ({
         );
         shadowList.sort((b1, b2) => new Date(b2.frontmatter.date) - new Date(b1.frontmatter.date));
 
-        app.writeTemp('blogMate.json', JSON.stringify({ pageList, countMateData, pageConfig, shadowList }));
+        app.writeTemp('blogMate.json', JSON.stringify({ pageList, countMateData, pageConfig, shadowList, archiveMap }));
     },
 });

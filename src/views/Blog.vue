@@ -1,5 +1,13 @@
 <template>
-    <div class="blog-infos">
+    <div class="archiveList" v-if="archiveList.length">
+        <div class="archive-item" v-for="archive in archiveList">
+            <p class="archive-item-title" v-if="archive.newTitle">{{ archive.archiveTitle }}</p>
+            <a class="archive-item-name" :class="{ active: path === archive.path }" :href="archive.path">
+                {{ archive.pageTitle }}
+            </a>
+        </div>
+    </div>
+    <div class="blog-infos" v-else>
         <a :href="item.url" class="blog-info" v-for="item in staticFrontmatter">
             <span class="blog-info-text">{{ item.value }}</span>
             <Icon class="blog-info-icon" :icon="staticFrontmatterIconMap[item.name]" />
@@ -19,12 +27,14 @@
         </div>
     </div>
     <MdView class="blog-mdView" />
-    <p class="recom-title">✨相关推荐✨</p>
-    <div class="recoms" ref="recom" v-if="recommendations.length">
-        <a :href="item.path" class="recom" v-for="(item, index) in recommendations" :key="index">
-            ✨ {{ item.frontmatter.title }}
-        </a>
-    </div>
+    <template v-if="recommendations.length">
+        <p class="recom-title">✨相关推荐✨</p>
+        <div class="recoms" ref="recom" v-if="recommendations.length">
+            <a :href="item.path" class="recom" v-for="(item, index) in recommendations" :key="index">
+                ✨ {{ item.frontmatter.title }}
+            </a>
+        </div>
+    </template>
     <p class="recom-title">🧐评论🧐</p>
     <div class="blog-comment" ref="comment">
         <div class="blog-comment-main">
@@ -42,110 +52,139 @@
                 lang="zh-CN" />
         </div>
     </div>
-    <Toc class="blog-toc" ref="toc" />
+    <div class="blog-toc">
+        <Toc ref="toc" />
+    </div>
 </template>
 
-<script>
-import { pageList as pageDatas, pageConfig } from '@temp/blogMate';
-import { usePageData } from '@vuepress/client';
+<script setup>
+import { archiveMap, pageConfig, pageDatas } from '../utils/blogMate';
+import { usePageData, useRoute, useRouter } from '@vuepress/client';
 import MdView from '../components/MdView.vue';
 import Icon from '../components/Icon.vue';
 import Giscus from '@giscus/vue';
 import md5 from 'md5';
+import { ref, computed } from 'vue';
 
-export default {
-    name: 'Blog',
-    components: { MdView, Giscus, Icon },
-    props: [],
-    data: () => ({
-        currentHash: '',
-        pageData: usePageData().value,
-    }),
-    computed: {
-        staticFrontmatterIconMap() {
-            return pageConfig.menus
-                .filter((item) => item.type === 'statistics')
-                .reduce((staticFrontmatterIconMap, item) => {
-                    staticFrontmatterIconMap[item.statistics.frontName] = {
-                        fontIcon: item.fontIcon,
-                        imgIcon: item.imgIcon,
-                    };
-                    return staticFrontmatterIconMap;
-                }, {});
-        },
-        staticFrontmatter() {
-            return pageConfig.countMateNames.reduce((staticFrontmatter, name) => {
-                if (!this.pageData.frontmatter[name]) return staticFrontmatter;
-                if (pageConfig.isArrMateNames.includes(name)) {
-                    this.pageData.frontmatter[name].split(' ').forEach((n) => {
-                        staticFrontmatter.push({
-                            name: name,
-                            value: n,
-                            url: `/?${name}=${n}`,
-                        });
-                    });
-                } else {
-                    staticFrontmatter.push({
-                        name: name,
-                        value: this.pageData.frontmatter[name],
-                        url: `/?${name}=${this.pageData.frontmatter[name]}`,
-                    });
-                }
-                return staticFrontmatter;
-            }, []);
-        },
-        recommendations() {
-            const pageData = pageDatas.find((i) => i.frontmatter.id === this.pageData.frontmatter.id);
-            if (pageData && pageData.frontmatter && pageData.frontmatter.recommendations) {
-                return pageData.frontmatter.recommendations
-                    .map((id) => pageDatas.find((i) => i.frontmatter.id === +id))
-                    .filter((i) => i);
-            }
-            return [];
-        },
-    },
-    watch: {},
-    methods: {
-        gotoComment() {
-            if (typeof window == 'undefined') return;
-            window.document.documentElement.scrollTop = this.$refs.comment.offsetTop - 200;
-        },
-        gotoTop() {
-            if (typeof window == 'undefined') return;
-            window.document.documentElement.scrollTop = 0;
-        },
-        gotoRecom() {
-            if (typeof window == 'undefined') return;
-            window.document.documentElement.scrollTop = this.$refs.recom.offsetTop - 200;
-        },
-    },
-    created() {
-        if (typeof window == 'undefined') return;
+const currentHash = ref('');
+const pageData = usePageData().value;
+const archiveList = archiveMap[pageData.frontmatter.archive] || [];
+const comment = ref(null);
+const recom = ref(null);
+const router = useRouter();
+const path = decodeURI(useRoute().path.slice(1));
+const toc = ref(null);
+console.log(useRoute());
 
-        // 检查是否直接进入隐藏文件
-        if (this.pageData.frontmatter.shadow === true) {
-            const shadow = sessionStorage.getItem('shadow');
-            if (!shadow || md5(shadow.slice(6)) !== themeConfig.shadowPassword) {
-                this.$router.push('/');
-            }
-            return;
+const staticFrontmatterIconMap = computed(() => {
+    return pageConfig.menus
+        .filter((item) => item.type === 'statistics')
+        .reduce((staticFrontmatterIconMap, item) => {
+            staticFrontmatterIconMap[item.statistics.frontName] = {
+                fontIcon: item.fontIcon,
+                imgIcon: item.imgIcon,
+            };
+            return staticFrontmatterIconMap;
+        }, {});
+});
+
+const staticFrontmatter = computed(() => {
+    return pageConfig.countMateNames.reduce((staticFrontmatter, name) => {
+        if (!pageData.frontmatter[name]) return staticFrontmatter;
+        if (pageConfig.isArrMateNames.includes(name)) {
+            pageData.frontmatter[name].split(' ').forEach((n) => {
+                staticFrontmatter.push({
+                    name: name,
+                    value: n,
+                    url: `/?${name}=${n}`,
+                });
+            });
+        } else {
+            staticFrontmatter.push({
+                name: name,
+                value: pageData.frontmatter[name],
+                url: `/?${name}=${pageData.frontmatter[name]}`,
+            });
         }
+        return staticFrontmatter;
+    }, []);
+});
 
-        // toc滚动跟随
-        window.addEventListener('scroll', () => {
-            if (this.currentHash === location.hash) return;
-            this.currentHash = location.hash;
-            const activeToc = this.$refs.toc.querySelector('.route-link.vuepress-toc-link.active');
-            if (!activeToc) return;
-            this.$refs.toc.scrollTop = activeToc.offsetTop - this.$refs.toc.clientHeight / 2;
-        });
-    },
-    mounted() {},
-    destroy() {},
-};
+const recommendations = computed(() => {
+    const recommendations = pageDatas.find((i) => i.frontmatter.id === pageData.frontmatter.id);
+    if (recommendations && recommendations.frontmatter && recommendations.frontmatter.recommendations) {
+        return recommendations.frontmatter.recommendations
+            .map((id) => pageDatas.find((i) => i.frontmatter.id === +id))
+            .filter((i) => i);
+    }
+    return [];
+});
+
+function gotoComment() {
+    if (typeof window == 'undefined') return;
+    window.document.documentElement.scrollTop = comment.value.offsetTop - 200;
+}
+
+function gotoTop() {
+    if (typeof window == 'undefined') return;
+    window.document.documentElement.scrollTop = 0;
+}
+
+function gotoRecom() {
+    if (typeof window == 'undefined') return;
+    window.document.documentElement.scrollTop = recom.value.offsetTop - 200;
+}
+
+if (typeof window !== 'undefined') {
+    // 检查是否直接进入隐藏文件
+    if (pageData.frontmatter.shadow === true) {
+        const shadow = sessionStorage.getItem('shadow');
+        if (!shadow || md5(shadow.slice(6)) !== themeConfig.shadowPassword) {
+            router.push('/');
+        }
+    }
+
+    // toc滚动跟随
+    window.addEventListener('scroll', () => {
+        if (currentHash.value === location.hash) return;
+        currentHash.value = location.hash;
+        const activeToc = toc.value.querySelector('.route-link.vuepress-toc-link.active');
+        if (!activeToc) return;
+        toc.value.scrollTop = activeToc.offsetTop - toc.value.clientHeight / 2;
+    });
+}
 </script>
 
 <style scoped>
+.archiveList {
+    position: fixed;
+    top: 50%;
+    right: calc(50% + 420px);
+    overflow: auto;
+    transform: translate(0, -50%);
+    max-height: 80%;
+    min-height: 50%;
+}
+.archive-item {
+    /* margin-bottom: 10px; */
+    margin-right: 20px;
+}
+.archive-item-title {
+    font-size: var(--size2);
+    font-weight: 900;
+    margin-bottom: 10px;
+}
+.archive-item-name {
+    font-size: var(--size1);
+    color: #444;
+}
+.archive-item-name:hover {
+    font-size: var(--size1);
+    color: var(--color-theme);
+}
+.archive-item-name.active {
+    color: var(--color-theme);
+}
 .blog-infos {
     position: fixed;
     top: 50%;
@@ -260,7 +299,7 @@ export default {
     position: relative;
     top: 200px;
     padding-bottom: 200px;
-    background: linear-gradient(#fff0, #fff 50px);
+    /* background: linear-gradient(#fff0, #fff 50px); */
     z-index: 1;
     pointer-events: none;
 }

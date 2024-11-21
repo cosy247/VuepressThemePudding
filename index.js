@@ -26,6 +26,13 @@ const defaultConfig = {
     /** 自定义容器目录 */
     componentsPath: 'mdComponents',
 
+    /** 首页显示模式：list，introduce */
+    homeType: 'list',
+    /** 菜单位置：center, left, right, right-right */
+    menuAlign: 'center',
+    /** 是否显示页面外边框 */
+    outline: true,
+
     /** 是否开启相关推荐 */
     isOpenBlurRecommend: true,
     /** 是否开启自动推荐 */
@@ -39,7 +46,10 @@ const defaultConfig = {
             { name: 'id', defaultValue: '${timestamp}' },
             { name: 'title', inputPrompt: '文章标题', defaultValue: '${filename}' },
             { name: 'description', inputPrompt: '文章描述', defaultValue: '${title}' },
-            { name: 'tags', inputPrompt: '文章标签，多个之间用逗号隔开', defaultValue: '杂记' },
+            // { name: 'tags', inputPrompt: '文章标签，多个之间用逗号隔开', defaultValue: '杂记' },
+            { name: 'archive', inputPrompt: '文章归档，唯一' },
+            { name: 'archiveTitle', inputPrompt: '文章归档目录标题' },
+            { name: 'archiveTop', inputPrompt: '文章归档排序，数字越大越靠前' },
             { name: 'shadow', inputPrompt: '是否为隐藏文件：y/n', defaultValue: 'n' },
             { name: 'top', inputPrompt: '是否置顶，数字越大优先级越高' },
         ],
@@ -97,6 +107,9 @@ export default (pConfig = {}) => {
     const pageConfig = {
         title: config.title,
         logo: config.logo,
+        homeType: config.homeType,
+        menuAlign: config.menuAlign,
+        outline: config.outline,
         mottos: config.mottos,
         links: config.links,
         isOpenBlurRecommend: config.isOpenBlurRecommend,
