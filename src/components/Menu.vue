@@ -297,17 +297,18 @@ if (typeof window !== 'undefined') {
 
 .menu {
     cursor: pointer;
-    padding: 20px;
     transition: color 0.1s;
     font-size: 15px;
     z-index: 9;
 }
 
 .menu:hover {
-    color: #1a1a1a;
+    color: var(--color-theme);
 }
 
 .menu-title {
+    padding: 20px;
+    display: block;
     font-weight: 600;
 }
 

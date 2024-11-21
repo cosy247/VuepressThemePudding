@@ -32,7 +32,11 @@ const defaultConfig = {
     menuAlign: 'center',
     /** 是否显示页面外边框 */
     outline: true,
+    /** 评论配置 */
+    giscus: {},
 
+    /** 是否默认生成草稿 */
+    draft: true,
     /** 是否开启相关推荐 */
     isOpenBlurRecommend: true,
     /** 是否开启自动推荐 */
@@ -107,6 +111,7 @@ export default (pConfig = {}) => {
     const pageConfig = {
         title: config.title,
         logo: config.logo,
+        giscus: config.giscus,
         homeType: config.homeType,
         menuAlign: config.menuAlign,
         outline: config.outline,

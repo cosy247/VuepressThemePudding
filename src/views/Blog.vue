@@ -38,18 +38,7 @@
     <p class="recom-title">🧐评论🧐</p>
     <div class="blog-comment" ref="comment">
         <div class="blog-comment-main">
-            <Giscus
-                repo="cosy247/vuepress-theme-cosy"
-                repoId="R_kgDOJI48fw"
-                category="Announcements"
-                categoryId="DIC_kwDOJI48f84Ceg84"
-                mapping="pathname"
-                term="Welcome to @giscus/react component!"
-                reactionsEnabled="1"
-                emitMetadata="0"
-                inputPosition="top"
-                theme="light"
-                lang="zh-CN" />
+            <Giscus v-bind="giscusAttrs" />
         </div>
     </div>
     <div class="blog-toc">
@@ -74,7 +63,7 @@ const recom = ref(null);
 const router = useRouter();
 const path = decodeURI(useRoute().path.slice(1));
 const toc = ref(null);
-console.log(useRoute());
+const giscusAttrs = pageConfig.giscus;
 
 const staticFrontmatterIconMap = computed(() => {
     return pageConfig.menus
@@ -112,7 +101,7 @@ const staticFrontmatter = computed(() => {
 
 const recommendations = computed(() => {
     const recommendations = pageDatas.find((i) => i.frontmatter.id === pageData.frontmatter.id);
-    if (recommendations && recommendations.frontmatter && recommendations.frontmatter.recommendations) {
+    if (recommendations?.frontmatter?.recommendations?.length) {
         return recommendations.frontmatter.recommendations
             .map((id) => pageDatas.find((i) => i.frontmatter.id === +id))
             .filter((i) => i);

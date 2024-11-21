@@ -50,7 +50,7 @@ function getDefaultValue(attrs, defaultValue) {
     while (true) {
         if (!attrs.filename) {
             attrs.filename = await getInput('❗ 请输入文件名: ');
-        } else if (await isFileExisted(`${vuepressConfig.public}/@${attrs.filename}.md`)) {
+        } else if (vuepressConfig.draft && (await isFileExisted(`${vuepressConfig.public}/@${attrs.filename}.md`))) {
             attrs.filename = await getInput(`❗ 已存在草稿文件: @${attrs.filename}.md, 请重新输入文件名: `);
         } else if (await isFileExisted(`${vuepressConfig.public}/${attrs.filename}.md`)) {
             attrs.filename = await getInput(`❗ 已存在文件: ${attrs.filename}.md, 请重新输入文件名: `);
@@ -74,8 +74,8 @@ function getDefaultValue(attrs, defaultValue) {
     Object.entries(attrs).forEach(([key, value]) => {
         templateContent = templateContent.replaceAll(`{ ${key} }`, value);
     });
-    fs.writeFileSync(`${vuepressConfig.public}/@${attrs.filename}.md`, templateContent);
-    console.log(`🐲生成草稿文件成功: ${vuepressConfig.public}/@${attrs.filename}.md`);
+    fs.writeFileSync(`${vuepressConfig.public}/${vuepressConfig.draft ? '@' : ''}${attrs.filename}.md`, templateContent);
+    console.log(`🐲生成${vuepressConfig.draft ? '草稿' : '文章'}文件成功: ${vuepressConfig.public}/@${attrs.filename}.md`);
 
     // 关闭
     stdio.close();
