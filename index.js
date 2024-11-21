@@ -24,7 +24,9 @@ const defaultConfig = {
     /** 网站logo */
     logo: 'assets/logo.logo',
     /** 自定义容器目录 */
-    componentsPath: 'mdComponents',
+    componentsPath: '',
+    /** 多个自定义容器目录 */
+    componentsPaths: [],
 
     /** 首页显示模式：list，introduce */
     homeType: 'list',
@@ -103,6 +105,9 @@ const defaultConfig = {
     links: [
         // { name: '&#xe673;github', url: 'https://github.com/cosy247' },
     ],
+
+    /** client.js config.enhance */
+    enhance() {},
 };
 
 export default (pConfig = {}) => {
@@ -167,6 +172,8 @@ export default (pConfig = {}) => {
         //   },
         // },
         template: config.template,
+        /** client.js config.enhance */
+        enhance: config.enhance,
         // 插件
         plugins: [
             gitPlugin({}),
@@ -208,24 +215,27 @@ export default (pConfig = {}) => {
     };
 
     // componentsPath 属性，目录下注册 md 文档中主键
-    if (config.componentsPath) {
+    const componentsPaths = config.componentsPaths || [];
+    if (config.componentsPath) componentsPaths.push(config.componentsPath);
+    config.componentsPaths.forEach((componentsPath) => {
         initOption.plugins.push(
             registerComponentsPlugin({
-                componentsDir: config.componentsPath,
+                componentsDir: componentsPath,
             })
         );
         initOption.plugins.push(
-            ...fs.readdirSync(config.componentsPath).map((file) => {
+            ...fs.readdirSync(componentsPath).map((file) => {
                 const [fileName] = file.split('.');
                 return containerPlugin({
                     type: fileName,
                     render: function (tokens, index) {
                         if (tokens[index].nesting === 1) {
+                            // fs.writeFile('./tokens.json', JSON.stringify(tokens.slice(index)), () => {});
                             const params = tokens[index].info.slice(fileName.length).trim();
                             const end = tokens.findIndex((token) => token.type === `container_${fileName}_close`);
                             const contents = tokens
                                 .slice(index, end + 1)
-                                .filter((token) => token.type === 'inline')
+                                .filter((token) => ['html_block', 'inline'].includes(token.type))
                                 .reduce((contents, token) => {
                                     contents.push(...token.content.split('\n'));
                                     return contents;
@@ -240,7 +250,7 @@ export default (pConfig = {}) => {
                 });
             })
         );
-    }
+    });
 
     return initOption;
 };

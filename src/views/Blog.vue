@@ -27,6 +27,15 @@
         </div>
     </div>
     <MdView class="blog-mdView" />
+    <div class="navigate">
+        <a class="navigate-left" v-if="archiveNavigate.left" :href="archiveNavigate.left.path">
+            {{ archiveNavigate.left.pageTitle }}
+        </a>
+        <div></div>
+        <a class="navigate-right" v-if="archiveNavigate.right" :href="archiveNavigate.right.path">
+            {{ archiveNavigate.right.pageTitle }}
+        </a>
+    </div>
     <template v-if="recommendations.length">
         <p class="recom-title">✨相关推荐✨</p>
         <div class="recoms" ref="recom" v-if="recommendations.length">
@@ -35,12 +44,14 @@
             </a>
         </div>
     </template>
-    <p class="recom-title">🧐评论🧐</p>
-    <div class="blog-comment" ref="comment">
-        <div class="blog-comment-main">
-            <Giscus v-bind="giscusAttrs" />
+    <template v-if="giscusAttrs.repo && giscusAttrs.repoId">
+        <p class="recom-title">🧐评论🧐</p>
+        <div class="blog-comment" ref="comment">
+            <div class="blog-comment-main">
+                <Giscus v-bind="giscusAttrs" />
+            </div>
         </div>
-    </div>
+    </template>
     <div class="blog-toc">
         <Toc ref="toc" />
     </div>
@@ -64,6 +75,14 @@ const router = useRouter();
 const path = decodeURI(useRoute().path.slice(1));
 const toc = ref(null);
 const giscusAttrs = pageConfig.giscus;
+
+const archiveNavigate = computed(() => {
+    const index = archiveList.findIndex((ar) => ar.path === path);
+    return {
+        left: index > 0 ? archiveList[index - 1] : null,
+        right: index < archiveList.length - 1 ? archiveList[index + 1] : null,
+    };
+});
 
 const staticFrontmatterIconMap = computed(() => {
     return pageConfig.menus
@@ -153,15 +172,17 @@ if (typeof window !== 'undefined') {
     transform: translate(0, -50%);
     max-height: 80%;
     min-height: 50%;
+    border-right: 1px solid #ccc;
+    padding: 10px 0;
+    padding-right: 40px;
 }
 .archive-item {
-    /* margin-bottom: 10px; */
-    margin-right: 20px;
+    margin-bottom: 10px;
 }
 .archive-item-title {
     font-size: var(--size2);
     font-weight: 900;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
 .archive-item-name {
     font-size: var(--size1);
@@ -255,6 +276,55 @@ if (typeof window !== 'undefined') {
     margin: auto;
     width: 95%;
     max-width: var(--blog-width);
+}
+.navigate {
+    margin: auto;
+    width: 95%;
+    max-width: var(--blog-width);
+    display: flex;
+    justify-content: space-between;
+}
+.navigate-left,
+.navigate-right {
+    width: 48%;
+    padding: 15px;
+    box-sizing: border-box;
+    font-size: var(--size1);
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    color: var(--color-theme);
+    margin-top: 50px;
+    font-weight: 900;
+    transition: 0.2s;
+}
+.navigate-left {
+    text-align: left;
+}
+.navigate-right {
+    text-align: right;
+}
+.navigate-left::before {
+    content: "上一篇";
+    color: #555;
+    display: block;
+    transform: scale(0.9);
+    transform-origin: top left;
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+.navigate-right::before {
+    content: "下一篇";
+    color: #555;
+    display: block;
+    text-align: right;
+    transform: scale(0.9);
+    transform-origin: top right;
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+.navigate-left:hover,
+.navigate-right:hover {
+    border-color: var(--color-theme);
 }
 .recom-title {
     font-size: var(--size3);
