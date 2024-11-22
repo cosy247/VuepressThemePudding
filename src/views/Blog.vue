@@ -171,19 +171,19 @@ if (typeof window !== 'undefined') {
   right: calc(50% + 420px);
   overflow: auto;
   transform: translate(0, -50%);
-  max-height: 80%;
-  min-height: 50%;
+  height: 80%;
+  margin-top: 5vh;
   border-right: 1px solid #ccc;
   padding: 10px 0;
   padding-right: 40px;
 }
-.archive-item {
-  margin-bottom: 10px;
+.archive-item + .archive-item {
+  margin-top: 30px;
 }
 .archive-item-title {
   font-size: var(--size2);
   font-weight: 900;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 .archive-item-name {
   font-size: var(--size1);

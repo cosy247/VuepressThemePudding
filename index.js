@@ -238,9 +238,9 @@ export default (pConfig = {}) => {
                 .map((token) => token.content)
                 .join('\n');
               return `<${fileName} 
-                                :params="decodeURI('${encodeURI(params).replaceAll("'", "\\'")}')"
-                                :contents="decodeURI('${encodeURI(content).replaceAll("'", "\\'")}')"
-                            ><template #default>`;
+                :params="decodeURI('${encodeURI(params).replaceAll("'", "\\'")}')"
+                :contents="decodeURI('${encodeURI(content).replaceAll("'", "\\'")}')"
+              ><template #default>`;
             } else {
               return `</template></${fileName}>`;
             }
