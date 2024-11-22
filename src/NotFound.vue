@@ -1,5 +1,5 @@
 <template>
-    <Layout :isNotFound="true"></Layout>
+  <Layout :isNotFound="true"></Layout>
 </template>
 
 <script setup>
@@ -8,6 +8,6 @@ import Layout from './Layout.vue';
 
 <style scoped>
 .NotFound {
-    position: relative;
+  position: relative;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
-    <div class="mdView">
-        <Content :path="path" class="mdContent" />
-    </div>
+  <div class="mdView">
+    <Content :path="path" class="mdContent" />
+  </div>
 </template>
 
 <script setup>
@@ -12,6 +12,6 @@ const { path } = defineProps(['path']);
 
 <style scoped>
 .MdView {
-    position: relative;
+  position: relative;
 }
 </style>
