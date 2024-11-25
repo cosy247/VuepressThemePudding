@@ -83,21 +83,22 @@ if (pageConfig.mottos instanceof Array) {
   mottos.value = [pageConfig.mottos];
 }
 
-window.addEventListener('scroll', async () => {
-  const { clientHeight, scrollTop, scrollHeight } = document.documentElement;
-  if (scrollTop < clientHeight) {
-    firstPageProportion.value = scrollTop / clientHeight;
-  }
-  if (isAddingPageList.value || remainPageList.value.length === 0) return;
-  if (scrollHeight - clientHeight - scrollTop < 400) {
-    isAddingPageList.value = true;
-    pageList.push(...remainPageList.value.splice(0, pageSize.value));
-    await nextTick();
-    isAddingPageList.value = false;
-  }
-});
-
-initPageList();
+if (typeof window !== 'undefined') {
+  window.addEventListener('scroll', async () => {
+    const { clientHeight, scrollTop, scrollHeight } = document.documentElement;
+    if (scrollTop < clientHeight) {
+      firstPageProportion.value = scrollTop / clientHeight;
+    }
+    if (isAddingPageList.value || remainPageList.value.length === 0) return;
+    if (scrollHeight - clientHeight - scrollTop < 400) {
+      isAddingPageList.value = true;
+      pageList.push(...remainPageList.value.splice(0, pageSize.value));
+      await nextTick();
+      isAddingPageList.value = false;
+    }
+  });
+  initPageList();
+}
 </script>
 
 <style scoped>

@@ -241,9 +241,8 @@ export default (pConfig = {}) => {
                 :params="decodeURI('${encodeURI(params).replaceAll("'", "\\'")}')"
                 :contents="decodeURI('${encodeURI(content).replaceAll("'", "\\'")}')"
               ><template #default>`;
-            } else {
-              return `</template></${fileName}>`;
             }
+            return `</template></${fileName}>`;
           },
         });
       })
