@@ -56,17 +56,19 @@ const pageFilterType = computed(() => {
 });
 
 const pageFilterValue = computed(() => {
-  return route.query[pageFilterType] || '';
+  return route.query[pageFilterType.value] || '';
 });
 
 watch(() => [pageFilterType, pageFilterValue], initPageList);
 
 function initPageList() {
-  if (pageFilterType) {
-    if (pageConfig.isArrMateNames.includes(pageFilterType)) {
-      remainPageList.value = pageDatas.filter((item) => item.frontmatter[pageFilterType].includes(pageFilterValue));
+  if (pageFilterType.value) {
+    if (pageConfig.isArrMateNames.includes(pageFilterType.value)) {
+      remainPageList.value = pageDatas.filter((item) => {
+        return item.frontmatter[pageFilterType.value].includes(pageFilterValue.value);
+      });
     } else {
-      remainPageList.value = pageDatas.filter((item) => item.frontmatter[pageFilterType] === pageFilterValue);
+      remainPageList.value = pageDatas.filter((item) => item.frontmatter[pageFilterType.value] === pageFilterValue.value);
     }
   } else {
     remainPageList.value = pageDatas;
@@ -92,7 +94,7 @@ if (typeof window !== 'undefined') {
     if (isAddingPageList.value || remainPageList.value.length === 0) return;
     if (scrollHeight - clientHeight - scrollTop < 400) {
       isAddingPageList.value = true;
-      pageList.push(...remainPageList.value.splice(0, pageSize.value));
+      pageList.value.push(...remainPageList.value.splice(0, pageSize.value));
       await nextTick();
       isAddingPageList.value = false;
     }
@@ -112,7 +114,7 @@ if (typeof window !== 'undefined') {
 }
 
 .cover.filter {
-  height: calc(40vh - 60px - var(--outer-width));
+  height: calc(50vh - 60px - var(--outer-width));
 }
 
 .cover-content {
