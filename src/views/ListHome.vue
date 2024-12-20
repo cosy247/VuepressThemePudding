@@ -1,5 +1,5 @@
 <template>
-  <div class="cover" :class="{ filter: pageFilterType }">
+  <div :class="pageFilterType ? 'filter cover' : 'cover'">
     <div class="cover-content" :style="{ paddingTop: 37 * firstPageProportion + '%' }">
       <p class="cover-title" v-if="pageFilterType">
         {{ pageFilterType }}
@@ -52,6 +52,7 @@ const firstPageProportion = ref(0);
 const route = useRoute();
 
 const pageFilterType = computed(() => {
+  console.log(pageConfig, route.query);
   return pageConfig.countMateNames.find((name) => route.query[name]) || '';
 });
 
@@ -76,6 +77,7 @@ function initPageList() {
   allPageCount.value = pageList.value.length + remainPageList.value.length;
   pageList.value = remainPageList.value.splice(0, pageSize.value);
 }
+initPageList();
 
 if (pageConfig.mottos instanceof Array) {
   if (pageConfig.mottos.length) {
@@ -99,7 +101,6 @@ if (typeof window !== 'undefined') {
       isAddingPageList.value = false;
     }
   });
-  initPageList();
 }
 </script>
 
