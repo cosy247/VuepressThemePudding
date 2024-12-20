@@ -85,7 +85,7 @@
             v-for="(item, index) in searchList"
             class="search-result-item"
             @click="goSearchLine(item.path)"
-            :class="{ 'search-result-item-active': index === this.currentSearchLineIndex }"
+            :class="{ 'search-result-item-active': index === currentSearchLineIndex }"
             @mouseover="currentSearchLineIndex = index">
             <p class="search-result-item-title">
               <span
@@ -138,18 +138,20 @@ function closeReadMeContent() {
   window.document.body.style.overflowY = 'auto';
   window.document.body.style.paddingRight = '0';
 }
+
 async function showSearchBox() {
   isShowSearch.value = true;
   await nextTick();
   searchInput.value.focus();
 }
+
 function search() {
   currentSearchLineIndex.value = 0;
-  const searchText = searchText.value.toLowerCase().trim();
-  if (searchText === '') {
+  const searchTextTrim = searchText.value.toLowerCase().trim();
+  if (searchTextTrim === '') {
     searchList.value = [];
   } else {
-    if (md5(searchText) === pageConfig.shadowPassword) {
+    if (md5(searchTextTrim) === pageConfig.shadowPassword) {
       searchList.value = shadows;
     } else {
       searchList.value = pageDatas
@@ -158,10 +160,10 @@ function search() {
           const countIndexs = [];
           const lowerCasetitle = item.frontmatter.title.toLowerCase();
           for (let index = 0; index < lowerCasetitle.length; index++) {
-            if (lowerCasetitle[index] !== searchText[count]) continue;
+            if (lowerCasetitle[index] !== searchTextTrim[count]) continue;
             count++;
             countIndexs.push(index);
-            if (count < searchText.length) continue;
+            if (count < searchTextTrim.length) continue;
             return {
               countIndexs,
               ...item,
@@ -293,7 +295,7 @@ if (typeof window !== 'undefined') {
 }
 
 .menu:hover {
-  color: var(--color-theme);
+  color: #1a1a1a;
 }
 
 .menu-title {

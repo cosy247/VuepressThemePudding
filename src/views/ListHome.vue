@@ -52,7 +52,6 @@ const firstPageProportion = ref(0);
 const route = useRoute();
 
 const pageFilterType = computed(() => {
-  console.log(pageConfig, route.query);
   return pageConfig.countMateNames.find((name) => route.query[name]) || '';
 });
 
@@ -69,7 +68,9 @@ function initPageList() {
         return item.frontmatter[pageFilterType.value].includes(pageFilterValue.value);
       });
     } else {
-      remainPageList.value = pageDatas.filter((item) => item.frontmatter[pageFilterType.value] === pageFilterValue.value);
+      remainPageList.value = pageDatas.filter((item) => {
+        return item.frontmatter[pageFilterType.value] == pageFilterValue.value;
+      });
     }
   } else {
     remainPageList.value = pageDatas;
