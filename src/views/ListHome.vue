@@ -131,11 +131,6 @@ if (typeof window !== 'undefined') {
 
 .cover-title {
   font-size: 11vmin;
-  font-weight: 900;
-  width: 100%;
-  background: linear-gradient(to right, red, blue);
-  background-clip: text;
-  color: transparent;
   display: flex;
   align-items: baseline;
   animation: outFromBottom 0.5s;

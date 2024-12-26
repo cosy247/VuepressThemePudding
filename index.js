@@ -14,7 +14,9 @@ import fs from 'fs';
 
 const defaultConfig = {
   /** 网站标题 */
-  title: '李十七的个人博客',
+  title: 'COSY247',
+  /**  */
+  pageTitle: 'COSY247',
   /** 网站介绍 */
   description: '基于vuepress的的个人博客。李十七的个人博客。个人博客。',
   /** 头部标签 */
@@ -114,7 +116,7 @@ export default (pConfig = {}) => {
   const config = { ...defaultConfig, ...pConfig };
 
   const pageConfig = {
-    title: config.title,
+    title: config.pageTitle || config.title,
     logo: config.logo,
     giscus: config.giscus,
     homeType: config.homeType,

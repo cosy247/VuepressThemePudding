@@ -1,13 +1,13 @@
 <template>
   <div class="Menu">
     <div class="content">
-      <a href="/" class="logo">
-        <img :src="pageConfig.logo" alt="" />
-        {{ pageConfig.title }}
-      </a>
-      <div href="/" class="logo mobile" :class="{ showMenu: isShowMenu }" @click="isShowMenu = !isShowMenu">
-        {{ pageConfig.title }}
-      </div>
+      <a href="/" class="logo" v-html="pageConfig.title"></a>
+      <div
+        href="/"
+        class="logo mobile"
+        :class="{ showMenu: isShowMenu }"
+        @click="isShowMenu = !isShowMenu"
+        v-html="pageConfig.title"></div>
       <div class="tools menus-right-tools" v-if="pageConfig.menuAlign === 'right-right'">
         <div class="tool" @click="showSearchBox">&#xe618;</div>
         <span class="tool" v-if="pageConfig.homeType !== 'introduce'" @click="openReadMeContent">&#xe650;</span>
@@ -242,14 +242,7 @@ if (typeof window !== 'undefined') {
 
 .logo {
   cursor: pointer;
-  font-size: 24px;
-  background: linear-gradient(to right, red, blue);
-  font-weight: 900;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  display: flex;
-  align-items: center;
+  font-size: 25px;
 }
 
 .logo.mobile {
@@ -620,6 +613,8 @@ if (typeof window !== 'undefined') {
 .readme-content {
   overflow: auto;
   height: 100%;
+  width: 95%;
+  margin: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -628,7 +623,7 @@ if (typeof window !== 'undefined') {
   display: none;
 }
 
-.readme-content :deep(h1) {
+.readme-content:deep(h1) {
   padding-top: 0;
   margin-top: 0;
 }

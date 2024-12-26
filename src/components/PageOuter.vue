@@ -30,24 +30,6 @@ body::-webkit-scrollbar {
   padding: 0px 0;
   margin: 0px 0;
 }
-
-body.noOutline::-webkit-scrollbar {
-  width: 10px;
-  background: transparent;
-}
-
-body::-webkit-scrollbar-thumb {
-  margin: 0px 0;
-  background: #aba;
-  width: var(--outer-width);
-  border-radius: var(--outer-width);
-}
-
-body.noOutline::-webkit-scrollbar-thumb {
-  width: 10px;
-  border-radius: 10px;
-  background: #bbb;
-}
 </style>
 
 <style scoped>
