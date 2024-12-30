@@ -53,9 +53,9 @@ export default (pageConfig) => ({
       return countMateData;
     }, {});
 
-    if (pageConfig.shadowPassword) {
-      pageConfig.shadowPassword = md5(pageConfig.shadowPassword);
-    }
+    // if (pageConfig.shadowPassword) {
+    //   pageConfig.shadowPassword = md5(pageConfig.shadowPassword);
+    // }
 
     const pageList = [];
     const shadowList = [];

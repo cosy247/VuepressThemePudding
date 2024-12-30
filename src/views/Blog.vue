@@ -146,12 +146,12 @@ function gotoRecom() {
 
 if (typeof window !== 'undefined') {
   // 检查是否直接进入隐藏文件
-  if (pageData.frontmatter.shadow === true) {
-    const shadow = sessionStorage.getItem('shadow');
-    if (!shadow || md5(shadow.slice(6)) !== themeConfig.shadowPassword) {
-      router.push('/');
-    }
-  }
+  // if (pageData.frontmatter.shadow === true) {
+  //   const shadow = sessionStorage.getItem('shadow');
+  //   if (!shadow || md5(shadow.slice(6)) !== themeConfig.shadowPassword) {
+  //     router.push('/');
+  //   }
+  // }
 
   // toc滚动跟随
   window.addEventListener('scroll', () => {

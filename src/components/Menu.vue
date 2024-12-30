@@ -151,28 +151,28 @@ function search() {
   if (searchTextTrim === '') {
     searchList.value = [];
   } else {
-    if (md5(searchTextTrim) === pageConfig.shadowPassword) {
-      searchList.value = shadows;
-    } else {
-      searchList.value = pageDatas
-        .map((item) => {
-          let count = 0;
-          const countIndexs = [];
-          const lowerCasetitle = item.frontmatter.title.toLowerCase();
-          for (let index = 0; index < lowerCasetitle.length; index++) {
-            if (lowerCasetitle[index] !== searchTextTrim[count]) continue;
-            count++;
-            countIndexs.push(index);
-            if (count < searchTextTrim.length) continue;
-            return {
-              countIndexs,
-              ...item,
-            };
-          }
-        })
-        .filter((item) => item);
-    }
+    // if (md5(searchTextTrim) === pageConfig.shadowPassword) {
+    //   searchList.value = shadows;
+    // } else {
+    searchList.value = pageDatas
+      .map((item) => {
+        let count = 0;
+        const countIndexs = [];
+        const lowerCasetitle = item.frontmatter.title.toLowerCase();
+        for (let index = 0; index < lowerCasetitle.length; index++) {
+          if (lowerCasetitle[index] !== searchTextTrim[count]) continue;
+          count++;
+          countIndexs.push(index);
+          if (count < searchTextTrim.length) continue;
+          return {
+            countIndexs,
+            ...item,
+          };
+        }
+      })
+      .filter((item) => item);
   }
+  // }
 }
 function searchPreventDefault(event) {
   const { code, key, keyCode, which } = event;
@@ -198,9 +198,9 @@ function goSearchLine(path) {
     if (!currentLine || !currentLine.path) return;
     path = currentLine.path;
   }
-  if (md5(searchText.value) === pageConfig.value.shadowPassword) {
-    sessionStorage.setItem('shadow', 'shadow' + searchText.value);
-  }
+  // if (md5(searchText.value) === pageConfig.value.shadowPassword) {
+  //   sessionStorage.setItem('shadow', 'shadow' + searchText.value);
+  // }
   window.location.href = path;
 }
 

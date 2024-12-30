@@ -46,7 +46,7 @@ const defaultConfig = {
   /** 是否开启自动推荐 */
   maxRecommendQuantity: 5,
   /** 隐藏文件密码 */
-  shadowPassword: 'qeqe',
+  // shadowPassword: 'qeqe',
   /** 新文章模板 */
   template: {
     filePath: 'template.md',
@@ -126,7 +126,7 @@ export default (pConfig = {}) => {
     links: config.links,
     isOpenBlurRecommend: config.isOpenBlurRecommend,
     maxRecommendQuantity: config.maxRecommendQuantity,
-    shadowPassword: config.shadowPassword,
+    // shadowPassword: config.shadowPassword,
     countMateNames: config.menus.filter((item) => item.type === 'statistics').map((item) => item.statistics.frontName),
     isArrMateNames: config.menus
       .filter((item) => item.type === 'statistics' && item.statistics.isMultiple)
