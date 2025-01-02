@@ -1,5 +1,5 @@
 <template>
-  <div :class="pageFilterType ? 'filter cover' : 'cover'">
+  <div class="cover">
     <div class="cover-content" :style="{ paddingTop: 37 * firstPageProportion + '%' }">
       <p class="cover-title" v-if="pageFilterType">
         {{ pageFilterType }}
@@ -109,14 +109,14 @@ if (typeof window !== 'undefined') {
 .cover {
   position: relative;
   width: 100%;
-  height: calc(100vh - 60px - var(--outer-width));
+  height: calc(50vh - 60px - var(--outer-width));
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.cover.filter {
-  height: calc(50vh - 60px - var(--outer-width));
+.cover:has(.cover-logo) {
+  height: calc(100vh - 60px - var(--outer-width));
 }
 
 .cover-content {

@@ -13,6 +13,9 @@ import { photoSwipePlugin } from '@vuepress/plugin-photo-swipe';
 import fs from 'fs';
 
 const defaultConfig = {
+  /** 打包路径 */
+  dest: './dest',
+
   /** 网站标题 */
   title: 'COSY247',
   /**  */
@@ -152,7 +155,7 @@ export default (pConfig = {}) => {
     temp: './.temp',
     cache: './.cache',
     public: './docs',
-    dest: './_CosyBlog',
+    dest: config.dest,
     permalinkPattern: ':raw',
     pagePatterns: ['*.md'],
     bundler: viteBundler({

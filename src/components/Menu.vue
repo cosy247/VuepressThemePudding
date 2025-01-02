@@ -47,7 +47,7 @@
                 </div>
                 <!-- exhibit -->
                 <div class="menu-exhibit-list" v-else-if="menu.type === 'exhibit'">
-                  <a :href="item.url" class="menu-exhibit-item" v-for="item in menu.exhibit" :title="item.describe">
+                  <a target="_blank" :href="item.url" class="menu-exhibit-item" v-for="item in menu.exhibit" :title="item.describe">
                     <Icon class="menu-exhibit-icon" :icon="item" />
                     {{ item.name }}
                   </a>
