@@ -18,7 +18,6 @@
     "cosy-new": "./bin/newDocs.js"
   },
   "devDependencies": {
-    "md5": "^2.3.0",
     "fs": "^0.0.1-security",
     "@giscus/vue": "^3.0.0",
     "echarts": "^5.5.0",

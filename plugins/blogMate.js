@@ -1,5 +1,3 @@
-import md5 from 'md5';
-
 /**
  * 相似度对比
  * @param s 文本1
