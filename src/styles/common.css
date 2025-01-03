@@ -63,8 +63,8 @@ a {
 .mdContent > h4[id],
 .mdContent > h4[id],
 .mdContent > h6[id] {
-  padding-top: 90px;
-  margin-top: -90px;
+  padding-top: 75px;
+  margin-top: -75px;
   z-index: -1;
 }
 
