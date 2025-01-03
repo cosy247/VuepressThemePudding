@@ -64,7 +64,6 @@ import { usePageData, useRoute, useRouter } from '@vuepress/client';
 import MdView from '../components/MdView.vue';
 import Icon from '../components/Icon.vue';
 import Giscus from '@giscus/vue';
-import md5 from 'md5';
 import { ref, computed } from 'vue';
 
 const currentHash = ref('');

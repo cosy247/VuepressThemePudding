@@ -115,7 +115,6 @@
 import { countMateData, pageConfig, pageDatas, shadows } from '../utils/blogMate';
 import MdView from './MdView.vue';
 import Icon from './Icon.vue';
-import md5 from 'md5';
 import { ref, nextTick } from 'vue';
 
 const isShowSearch = ref(false);
